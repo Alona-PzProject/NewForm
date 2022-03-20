@@ -1,0 +1,19 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "new-form-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/newForm/NewFormWebPart.js",
+          "manifest": "./src/webparts/newForm/NewFormWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "NewFormWebPartStrings": "lib/webparts/newForm/loc/{locale}.js",
+    "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js"
+  }
+}

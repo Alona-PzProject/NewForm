@@ -1,0 +1,16 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "version": "1.14.0",
+    "libraryName": "new-form",
+    "libraryId": "b2c7a935-d76e-48e0-85ef-7c98d2b3f3d0",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "new-form",
+    "solutionShortDescription": "new-form description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}
