@@ -10,7 +10,6 @@ import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
 
-
 export default class NewForm extends React.Component<INewFormProps, INewFormStates, any> {
 
   constructor(props) {
@@ -19,25 +18,25 @@ export default class NewForm extends React.Component<INewFormProps, INewFormStat
     this.state = {
       task: '',
       description: '',
-      priority: '',
+      priority: 'Low',
       dueDate: null,
       taskExecutor: [],
       emailTaskExecutor: ''
     };
   }
 
-  componentDidMount() {
-    this.fetchData();
-  }
+  // componentDidMount() {
+  //   this.fetchData();
+  // }
 
-  async fetchData() {
-    let web = Web(this.props.webURL);
-    const items: any[] = await web.lists.getById('8414a250-0699-4efa-afcc-f4a34b89498c').items.get();
-    console.log('items', items);
-  }
+  // async fetchData() {
+  //   let web = Web(this.props.webURL);
+  //   const items: any[] = await web.lists.getById('8414a250-0699-4efa-afcc-f4a34b89498c').items.get();
+  //   console.log('items', items);
+  // }
 
   public handleChange = (e: {target: {name: any; value: any; }; }) => {
-    console.log(e.target.value);
+    // console.log(e.target.value);
     const newState = { [e.target.name]: e.target.value } as Pick<INewFormStates, keyof INewFormStates>;
     this.setState(newState);
   }
@@ -47,21 +46,21 @@ export default class NewForm extends React.Component<INewFormProps, INewFormStat
   // }
 
   public handleSelectChange = (e) => {
-    console.log('e.target',e.target.value);
+    // console.log('e.target',e.target.value);
     this.setState({ priority: e.target.value });
   }
 
   public getPeoplePickerItems = (items: any[]) => {
-    console.log('Items:', items);
+    // console.log('Items:', items);
     this.setState({taskExecutor: items, emailTaskExecutor: items[0].secondaryText});
   }
 
   public ResetForm  = () => {
-    this.setState({ task: '', description: '', priority: '', dueDate: null, taskExecutor: [], emailTaskExecutor: ''}); 
+    this.setState({ task: '', description: '', priority: 'Low', dueDate: null, taskExecutor: [], emailTaskExecutor: ''}); 
   }
 
   public AddItem = () => {
-    console.log('state', this.state);
+    // console.log('state', this.state);
     let web = Web(this.props.webURL);
     web.lists.getById('8414a250-0699-4efa-afcc-f4a34b89498c').items.add({
       Title: this.state.task,
@@ -71,22 +70,20 @@ export default class NewForm extends React.Component<INewFormProps, INewFormStat
       Task_x0020_ExecutorId: this.state?.taskExecutor[0]?.id,
       Email_x0020_Task_x0020_Executor: this.state.emailTaskExecutor
     }).then(AddResult => {
-      console.log('Create AddResult', AddResult);
-      let taskId = AddResult.data.ID;
-      web.lists.getById('8414a250-0699-4efa-afcc-f4a34b89498c').items.getById(taskId).update({
+      // console.log('Create AddResult', AddResult);
+      web.lists.getById('8414a250-0699-4efa-afcc-f4a34b89498c').items.getById(AddResult.data.ID).update({
         NewID: {
           "__metadata": { "type": "SP.FieldUrlValue" },
-          "Description": taskId,
-          "Url": "https://projects1.sharepoint.com/sites/Development/Alona/SitePages/EditForm.aspx?FormID=" + taskId
+          "Url": `https://projects1.sharepoint.com/sites/Development/Alona/SitePages/EditForm.aspx?FormID=${AddResult.data.ID}`,
+          "Description": AddResult.data.ID.toString(),
         }
-      }).then(UpdateResult  => {
-        if(onclick) {
-          this.ResetForm();
-        }
-      })
+      });
+      alert("Created Successfully");
+      location.href = 'https://projects1.sharepoint.com/sites/Development/Alona/Lists/NewTasks/AllItems.aspx?viewpath=%2Fsites%2FDevelopment%2FAlona%2FLists%2FNewTasks%2FAllItems%2Easpx';
+    }).catch(Err => {
+      console.error(Err);
     });
-    alert("Created Successfully");
-    console.log('saved-state', this.state);
+    // console.log('saved-state', this.state);
   }
 
   public render(): React.ReactElement<INewFormProps> {
@@ -99,7 +96,7 @@ export default class NewForm extends React.Component<INewFormProps, INewFormStat
           <Select
             label="Priority"
             name="priority"
-            value={this.state.priority ? this.state.priority : 'Low'}
+            value={this.state.priority}
             onChange={(e) => {this.handleSelectChange(e)}}
             variant="outlined" 
             style={{ marginTop: '13px', width: '500px' }}
